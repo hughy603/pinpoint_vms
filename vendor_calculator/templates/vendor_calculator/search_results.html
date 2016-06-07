@@ -1,0 +1,35 @@
+{% extends "vendor_calculator/base.html" %}
+{% block title %}Search Results{% endblock %}
+{% block description %}
+Search results page {{ search }}
+{% endblock %}
+{% block content %}
+{% if config_list %}
+	<table class="table">
+		<thead class="thead-inverse">
+		<tr>
+			<th>Vendor</th>
+			<th>Config</th>
+			<th>Cost</th>
+			<th>Min Time</th>
+			<th>Max Time</th>
+		</tr>
+		</thead>
+		{% for config in config_list %}
+		<tr>
+		    <td>
+				<a href="{% url 'vendor_calculator:vendor_detail' config.vendor_id %}">
+					{{ config.vendor }}
+				</a>
+			</td>
+			<td>{{ config.configuration }}</td>
+			<td>{{ config.cost }}</td>
+			<td>{{ config.min_processing_days }}</td>
+			<td>{{ config.max_processing_days }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% else %}
+    <p>No vendors offer this configuration.</p>
+{% endif %}
+{% endblock %}

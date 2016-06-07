@@ -1,0 +1,19 @@
+{% extends "vendor_calculator/base.html" %}
+{% block title %}Home{% endblock %}
+{% block description %}
+This is a list of all vendors entered into the platform
+{% endblock %}
+
+{% block content %}
+{% if vendor_list %}
+    <ul>
+        {% for vendor in vendor_list %}
+            <li><a href="{% url 'vendor_calculator:vendor_detail' vendor.id %}">
+                {{ vendor.company_name }}
+            </a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No vendors are available.</p>
+{% endif %}
+{% endblock %}

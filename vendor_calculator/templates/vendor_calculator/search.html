@@ -1,0 +1,12 @@
+{% extends "vendor_calculator/base.html" %}
+{% block title %}Search{% endblock %}
+{% block description %}
+Search for the best vendor to get your product from
+{% endblock %}
+{% block content %}
+<form action="{% url 'vendor_calculator:search' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}
