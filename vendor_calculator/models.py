@@ -3,6 +3,14 @@ from django.db import models
 # Create your models here.
 class Vendor(models.Model):
     company_name = models.CharField(max_length=200)
+    website = models.CharField(max_length=200, blank = True)
+    turnaround_time = models.CharField(max_length=200, blank = True)
+    mistakes = models.CharField(max_length=200, blank = True)
+    product_options = models.CharField(max_length=200, blank = True)
+    customer_service = models.CharField(max_length=200, blank = True)
+    where_to_place_order = models.CharField(max_length=200, blank = True)
+    contact = models.CharField(max_length=200, blank = True)
+    address = models.CharField(max_length=200, blank = True)
 
     def __str__(self):
         return self.company_name

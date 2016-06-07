@@ -71,7 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pinpoint_vms.wsgi.application'
 
-from secret_settings import *
+from .secret_settings import *
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
