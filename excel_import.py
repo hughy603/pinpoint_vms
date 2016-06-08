@@ -1,3 +1,8 @@
+""" This POC imports an excel spreadsheet into pinpoints vendor calculation
+software.  This allows non-technical users to feed data into the application.
+
+TODO: Build web interface for importing new information
+"""
 import sys, os
 import pandas as pd
 
@@ -10,13 +15,29 @@ django.setup()
 from vendor_calculator.models import Vendor, Product, Configuration, VendorConfigurationProcess
 
 def say(*args):
+    """ This prints a line with a few stars prepended. It helps identify log
+    message if the application is verbose
+
+    TODO: Move to a central import thats executed during every python program
+    """
     print("***",*(args))
 
 def add_vendors(vendors):
+    """ This creates Django models for various vendors.  If a vendor already
+    exists, it is ignored
+    """
     say('Attempting to add the vendors ', vendors)
-    say('***********************')
-    say('IMPLEMENT ADDING VENDORS TO DJANGO')
-    say('***********************')
+
+    for vendor in vendors:
+        # Skip Vendor if it already exists
+        if(Vendor.objects.filter(company_name = vendor) != []):
+            say('Vendor',vendor,'already exists')
+            continue
+
+        vendorModel = Vendor(company_name = vendor)
+        vendorModel.save()
+        say('Added vendor', vendor)
+
     print()
 
 def add_products(products):

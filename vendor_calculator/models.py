@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Vendor(models.Model):
-    company_name = models.CharField(max_length=200)
+    company_name = models.CharField(max_length=200, unique = True)
     website = models.CharField(max_length=200, blank = True)
     turnaround_time = models.CharField(max_length=200, blank = True)
     mistakes = models.CharField(max_length=200, blank = True)
@@ -16,7 +16,7 @@ class Vendor(models.Model):
         return self.company_name
 
 class Product(models.Model):
-    product_name = models.CharField(max_length=200)
+    product_name = models.CharField(max_length=200, unique = True)
     vendors = models.ManyToManyField(Vendor)
     description =  models.CharField(max_length=4000)
 
@@ -26,7 +26,7 @@ class Product(models.Model):
 class Configuration(models.Model):
     product = models.ForeignKey(Product,
                                 on_delete  = models.CASCADE)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique = True)
     description =  models.CharField(max_length=4000,
                                    blank = True)
 
