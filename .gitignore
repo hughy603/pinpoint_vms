@@ -1,2 +1,4 @@
 pinpoint_vms/secret_settings.py
 *pyc
+.*
+!/.gitignore
