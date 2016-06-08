@@ -2,7 +2,7 @@ import sys
 from os.path import abspath
 import pandas as pd
 
-from .models import Vendor, Product, Configuration, VendorConfigurationProcess
+#from models import Vendor, Product, Configuration, VendorConfigurationProcess
 
 def say(*args):
     print("***",*(args))
