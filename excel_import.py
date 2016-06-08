@@ -30,7 +30,7 @@ def add_vendors(vendors):
 
     for vendor in vendors:
         # Skip Vendor if it already exists
-        if(Vendor.objects.filter(company_name = vendor) != []):
+        if(Vendor.objects.filter(company_name = vendor)):
             say('Vendor',vendor,'already exists')
             continue
 
@@ -42,13 +42,21 @@ def add_vendors(vendors):
 
 def add_products(products):
     say('Attempting to add the products', products)
-    say('***********************')
-    say('IMPLEMENT ADDING PRODUCTS TO DJANGO')
-    say('***********************')
+    for product in products:
+        # Skip Vendor if it already exists
+        if(Product.objects.filter(product_name = product)):
+            say('prodcut',product,'already exists')
+            continue
+
+        productModel = Product(product_name = product)
+        productModel.save()
+        say('Added product', product)
+
     print()
 
 def add_configs(item,configs):
-    say('Attempting to add the configurations', item, ':', configs)
+    # TODO IMPLEMENT THIS
+    say('Attempting to add the configurations\n', item, ':', configs)
     say('***********************')
     say('IMPLEMENT ADDING CONFIGURATION TO DJANGO')
     say('***********************')
@@ -86,6 +94,10 @@ if(__name__=='__main__'):
 
     # Get Configurations
     config_column = df.columns.values[1]
-    item_configs = df[[item_column, config_column]].groupby(item_column)
-    for item, configs in item_configs:
+    item_config_group = df[[item_column,
+                       config_column]].groupby(item_column)
+    item_configs = {k:list(v) for k,v in item_config_group[config_column]}
+    for item, configs in item_configs.items():
         add_configs(item, configs)
+
+    # TODO Get configuration cost per venor

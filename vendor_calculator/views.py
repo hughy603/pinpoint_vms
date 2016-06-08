@@ -28,9 +28,11 @@ class SearchForm(forms.Form):
         super(SearchForm, self).__init__(*args, **kwargs)
         if product_id != '':
             product = Product.objects.get(pk=product_id)
-            self.fields['configuration'] = forms.ModelChoiceField(
-                queryset = product.configuration_set.all().order_by('name')
-            )
+            configs = product.configuration_set.all()
+            if configs:
+                self.fields['configuration'] = forms.ModelChoiceField(
+                    queryset = configs.order_by('description')
+                )
 
 class SearchView(generic.FormView):
     form_class = SearchForm
@@ -44,13 +46,18 @@ class SearchView(generic.FormView):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            configuration = form.cleaned_data['configuration']
-            configs = configuration.vendorconfigurationprocess_set
-            if form.cleaned_data['maximum_arrival_days']:
-                configs = configs.filter(
-                    max_processing_days__lte=form.cleaned_data['maximum_arrival_days'],
-                )
-            configs = configs.order_by('cost')
+            configuration = form.cleaned_data.get('configuration','')
+
+            # TODO: Return a useful error if no configurations are found
+            if configuration:
+                configs = configuration.vendorconfigurationprocess_set
+                if form.cleaned_data['maximum_arrival_days']:
+                    configs = configs.filter(
+                        max_processing_days__lte=form.cleaned_data['maximum_arrival_days'],
+                    )
+                configs = configs.order_by('cost')
+            else:
+                configs = []
             return render(request, 'vendor_calculator/search_results.html',
                           {'config_list':configs})
         return render(request, self.template_name, {'form': form})

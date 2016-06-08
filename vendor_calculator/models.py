@@ -17,7 +17,6 @@ class Vendor(models.Model):
 
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique = True)
-    vendors = models.ManyToManyField(Vendor)
     description =  models.CharField(max_length=4000)
 
     def __str__(self):
@@ -26,9 +25,7 @@ class Product(models.Model):
 class Configuration(models.Model):
     product = models.ForeignKey(Product,
                                 on_delete  = models.CASCADE)
-    name = models.CharField(max_length=200, unique = True)
-    description =  models.CharField(max_length=4000,
-                                   blank = True)
+    description =  models.CharField(max_length=1000,unique = True)
 
     def __str__(self):
         return "{0} with {1}({2})" \
