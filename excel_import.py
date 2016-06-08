@@ -1,10 +1,12 @@
-import sys
-from os.path import abspath
+import sys, os
 import pandas as pd
 
-from pinpoint_vms import settings
-from django.core.management import setup_environ
-setup_environ(settings)
+# Setup DJango
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pinpoint_vms.settings")
+import django
+django.setup()
+
+# Import Models
 from vendor_calculator.models import Vendor, Product, Configuration, VendorConfigurationProcess
 
 def say(*args):
@@ -33,7 +35,7 @@ def add_configs(item,configs):
 
 if(__name__=='__main__'):
     # Load excel document
-    fname = abspath(sys.argv[1])
+    fname = os.path.abspath(sys.argv[1])
     say("Importing Excel Document ", fname)
     df = pd.read_excel(fname)
     say("First 5 rows look like\n", df.head())
