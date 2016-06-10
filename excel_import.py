@@ -2,9 +2,11 @@
 software.  This allows non-technical users to feed data into the application.
 
 TODO: Build web interface for importing new information
+TODO: Add update scenarios into the script
 """
 import sys, os
 import pandas as pd
+import numpy as np
 
 # Setup DJango
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pinpoint_vms.settings")
@@ -57,10 +59,31 @@ def add_products(products):
 def add_configs(item,configs):
     # TODO IMPLEMENT THIS
     say('Attempting to add the configurations\n', item, ':', configs)
-    say('***********************')
-    say('IMPLEMENT ADDING CONFIGURATION TO DJANGO')
-    say('***********************')
+    productModel = Product.objects.filter(product_name = item).all()[0]
+
+    for config in configs:
+        if(Configuration.objects.filter(product = productModel, description =
+                                        config)):
+            say('config',config,'already exists')
+            continue
+        configModel = Configuration(product = product, description = config)
+        configModel.save()
     print()
+
+def add_vendor_config(vendor,config,cost):
+    say('The vendor ',vendor,'sells',config,'for',cost)
+    vendorModel = Vendor.objects.filter(company_name = vendor).all()[0]
+    configModel = Configuration.objects.filter(description = config).all()[0]
+    if(VendorConfigurationProcess.objects.filter(
+        vendor = vendorModel,
+        configuration = configModel,
+    )):
+        say('already exists')
+
+    vendor_config = VendorConfigurationProcess(vendor = vendorModel,
+                                              configuration = configModel,
+                                              cost = cost)
+    vendor_config.save()
 
 if(__name__=='__main__'):
     # Load excel document
@@ -71,11 +94,11 @@ if(__name__=='__main__'):
 
     # Clean the data
     say("Replacing 'n/a' and NaN with null values")
-    df = df.fillna('n/a').replace({'n/a':None})
+    df = df.replace({'n/a':np.nan})
     say("Cleaned first 5 rows look like\n", df.head())
 
     # Add Vendors contained in the header
-    header = [colHeader.title() for colHeader in df.columns.values]
+    header = [colHeader for colHeader in df.columns.values]
     say("Dataframe header is ",header)
     # Expect first to columns to not be vendor names
     non_vendor_columns = ['Item', 'Configuration']
@@ -101,3 +124,11 @@ if(__name__=='__main__'):
         add_configs(item, configs)
 
     # TODO Get configuration cost per venor
+    print(vendor_columns)
+    print('Configuration costs are',df[[config_column]+vendor_columns].head())
+    #vendor_config = df[['Configuration']+vendor_columns].groupby([[config_column]+vendor_columns])
+    for vendor in vendor_columns:
+        vendor_config = df[[config_column,vendor]]
+        for config,cost in vendor_config.itertuples(index=False):
+            if pd.notnull(cost):
+                add_vendor_config(vendor,config,cost)

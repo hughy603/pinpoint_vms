@@ -28,9 +28,8 @@ class Configuration(models.Model):
     description =  models.CharField(max_length=1000,unique = True)
 
     def __str__(self):
-        return "{0} with {1}({2})" \
+        return "{0} with {1}" \
                 .format(self.product,
-                       self.name,
                        self.description,
                        )
 
@@ -42,6 +41,9 @@ class VendorConfigurationProcess(models.Model):
     cost = models.DecimalField(max_digits=7, decimal_places=2)
     min_processing_days = models.PositiveIntegerField(default=1)
     max_processing_days = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ('vendor', 'configuration',)
 
     def __str__(self):
         return "{} offers the product {} for ${}. It will arrive in " \
