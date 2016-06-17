@@ -1,4 +1,5 @@
 pinpoint_vms/secret_settings.py
+vendor_calculator/migrations
 *pyc
 .*
 !/.gitignore
